@@ -2,6 +2,7 @@ import { useState } from "react";
 import { initialClasses } from "./FakeData";
 import PageInfo from "./components/PageInfo";
 import ClassInfoCard from "./components/ClassInfoCard";
+import { getCurrentFormattedDate } from "./dateUtils.ts";
 
 import "./App.css";
 
@@ -9,14 +10,15 @@ import "./App.css";
 
 function ClassesPage() {
     const [classes, setClasses] = useState(initialClasses);
-
+    const formattedDate = getCurrentFormattedDate();
     console.log(classes);
 
     return (
         <div className="">
-            <PageInfo />
-            <ClassInfoCard classInfo={classes} />
-            <ClassInfoCard classInfo={classes} />
+            <PageInfo title="All Classes" subtitle={formattedDate} />
+            {classes.map((classItem) => {
+                return <ClassInfoCard key={classItem.id} classInfo={classItem} />;
+            })}
         </div>
     );
 }

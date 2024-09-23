@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { BrowserRouter,Routes,Route,Link } from "react-router-dom";
 import "./App.css";
+import { BrowserRouter,Routes,Route,Link } from "react-router-dom";
 import { initialClasses } from "./FakeData";
 import ClassesPage from "./ClassesPage";
 import Dashboard from "./Dashboard";
 import StudentsPage from "./StudentsPage";
 import UserCard from "./UserCard";
+
 
 
 
@@ -20,7 +21,7 @@ function App() {
     <>
     <div className="App">
       <BrowserRouter>
-      <nav>
+      <nav className="navigation-header">
           <ul>
             <li>
               <Link to="/">Home</Link>
@@ -34,10 +35,8 @@ function App() {
             <li>
               <Link to="/studentcard">Student Card </Link>
             </li>
-            <li>
-              <Link to="/non-existing-page">Non existing page</Link> (should trigger 404)
-            </li>
           </ul>
+          <hr />
         </nav>
           <Routes>
               <Route path="/" element={<Dashboard />}></Route>

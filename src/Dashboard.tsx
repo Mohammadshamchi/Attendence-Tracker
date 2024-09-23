@@ -1,33 +1,41 @@
 import React from "react";
-import { useState } from "react";
-import { initialClasses } from "./FakeData";
+import { useState, useEffect } from "react";
+import { initialClasses, ClassData } from "./FakeData";
 import { Calendar } from "@/components/ui/calendar"
 import PageInfo from "./components/PageInfo";
 import ClassInfoCard from "./components/ClassInfoCard";
-
+import { getCurrentFormattedDate } from "./dateUtils.ts";
 import "./App.css";
 
-
-
 function Dashboard() {
-    const [classes, setClasses] = useState(initialClasses);
-    const [date, setDate] = React.useState<Date | undefined>(new Date())
+  const [classes, setClasses] = useState<ClassData[]>([]);
+  const [date, setDate] = useState<Date | undefined>(new Date())
+  const formattedDate = getCurrentFormattedDate();
 
-    console.log(classes);
+  useEffect(() => {
+    setClasses(initialClasses);
+  }, []);
 
-    return (
-        <div className="App">
-            <PageInfo />
-            <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                className="rounded-md border"
-            />
-            <ClassInfoCard classInfo={classes} />
-            <ClassInfoCard classInfo={classes} />
-        </div>
-    );
+  console.log("Classes:", classes); // Add this line to check the classes state
+
+  return (
+    <div className="App">
+      <PageInfo title="Dashboard" subtitle={formattedDate} />
+      <Calendar
+        mode="single"
+        selected={date}
+        onSelect={setDate}
+        className="rounded-md border"
+      />
+      {classes.length > 0 ? (
+        classes.map((classItem) => (
+          <ClassInfoCard key={classItem.id} classInfo={classItem} />
+        ))
+      ) : (
+        <p>No classes available.</p>
+      )}
+    </div>
+  );
 }
 
 export default Dashboard;
