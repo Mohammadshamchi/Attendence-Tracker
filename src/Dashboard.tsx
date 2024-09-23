@@ -16,7 +16,6 @@ function Dashboard() {
     setClasses(initialClasses);
   }, []);
 
-  console.log("Classes:", classes); // Add this line to check the classes state
 
   return (
     <div className="App">

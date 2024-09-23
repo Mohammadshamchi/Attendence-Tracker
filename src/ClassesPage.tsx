@@ -11,7 +11,7 @@ import "./App.css";
 function ClassesPage() {
     const [classes, setClasses] = useState(initialClasses);
     const formattedDate = getCurrentFormattedDate();
-    console.log(classes);
+
 
     return (
         <div className="">

@@ -16,10 +16,10 @@ import "./App.css";
 
 
 
-function StudentsPage() {
+function ClassDetail() {
     const [classes, setClasses] = useState(initialClasses);
 
-    console.log(classes);
+
 
     return (
         <div >
@@ -58,4 +58,4 @@ function StudentsPage() {
     );
 }
 
-export default StudentsPage;
+export default ClassDetail;
