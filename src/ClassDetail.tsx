@@ -36,20 +36,10 @@ function ClassDetail() {
                 </TableHeader>
                 <TableBody>
                     <TableRow>
-<<<<<<< HEAD
                         <TableCell className="font-medium">Student 1</TableCell>
                         <TableCell>✅✅✅❌✅</TableCell>
                         <TableCell className="text-right">
                             <button className="btn btn-primary">View</button>
-=======
-                        <TableCell className="font-medium">Student1</TableCell>
-                        <TableCell>
-                            ✅✅✅❌✅
-                        </TableCell>
-                        <TableCell className="text-right">
-                            <button>View</button>
-
->>>>>>> fb973c9314457194c07542080cb317c60c39d537
                         </TableCell>
                     </TableRow>
                 </TableBody>
