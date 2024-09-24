@@ -7,6 +7,7 @@ import Dashboard from "./Dashboard";
 import ClassDetail from "./ClassDetail";
 import UserCard from "./UserCard";
 import AddClass from "./components/AddClass";
+import AddStudent from "./components/AddStudent";
 
 
 
@@ -38,6 +39,9 @@ function App() {
               <li>
                 <Link to="/addclass">Add Class </Link>
               </li>
+              <li>
+                <Link to="/addstudent">Add Student </Link>
+              </li>
             </ul>
             <hr />
           </nav>
@@ -47,6 +51,7 @@ function App() {
             <Route path="/classdetail" element={<ClassDetail />}></Route>
             <Route path="/studentcard" element={<UserCard />}></Route>
             <Route path="/addclass" element={<AddClass />}></Route>
+            <Route path="/addstudent" element={<AddStudent />}></Route>
             <Route path="*" element={<p>404 page here</p>}></Route>
           </Routes>
         </BrowserRouter>
