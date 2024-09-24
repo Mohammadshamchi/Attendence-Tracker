@@ -15,9 +15,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -26,6 +28,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -73,6 +76,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -105,6 +109,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -116,7 +121,8 @@
   justify-content: space-between;
   align-items: center;
 }
-.navigation-header li{
+
+.navigation-header li {
   display: flex;
   font-weight: bold;
   display: inline-block;
@@ -125,6 +131,7 @@
   justify-content: space-between;
 
 }
+
 .navigation-header hr {
   margin-bottom: 20px;
 }
@@ -147,6 +154,7 @@
   color: #666;
   margin: 0;
 }
+
 .calendar-container {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -185,7 +193,7 @@
   color: #888;
 }
 
-.user-card{
+.user-card {
   /* display: flex; */
   /* justify-content: space-between; */
 
@@ -201,39 +209,45 @@
   margin-top: 20px;
 }
 
-.user-card  img{ 
+.user-card img {
   align-self: stretch;
-    max-width: 100%;
-    overflow: hidden;
-    height: 247px;
-    flex-shrink: 0;
-    object-fit: cover;
+  max-width: 100%;
+  overflow: hidden;
+  height: 247px;
+  flex-shrink: 0;
+  object-fit: cover;
 }
-.user-card h3{
+
+.user-card h3 {
   flex: 1;
-    width: 100%;
-    position: relative;
-    font-size: 16px;
-    line-height: 140%;
-    font-family: Inter;
-    color: #1e1e1e;
-    text-align: left;
-    display: inline-block;
-    margin-top: 16px;
- 
+  width: 100%;
+  position: relative;
+  font-size: 16px;
+  line-height: 140%;
+  font-family: Inter;
+  color: #1e1e1e;
+  text-align: left;
+  display: inline-block;
+  margin-top: 16px;
+
 }
-.user-card p{
+
+.user-card p {
   margin-top: 8px;
 }
-.user-card-phone{
+
+.user-card-phone {
   font-weight: bold;
 }
 
-.user-card-number{
+.user-card-number {
   position: relative;
-    font-size: 14px;
-    line-height: 140%;
-    font-family: Inter;
-    color: #757575;
-    text-align: left;
+  font-size: 14px;
+  line-height: 140%;
+  font-family: Inter;
+  color: #757575;
+  text-align: left;
 }
+
+
+/* Add Class Component Style */
