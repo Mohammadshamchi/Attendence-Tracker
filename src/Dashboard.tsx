@@ -26,9 +26,14 @@ function Dashboard() {
         onSelect={setDate}
         className="rounded-md border"
       />
+
       {classes.length > 0 ? (
         classes.map((classItem) => (
-          <ClassInfoCard key={classItem.id} classInfo={classItem} />
+          // if selected date is in range of classItem.startDate and classItem.endDate
+          // then show the classItem
+          (date ?? "new Date()") >= classItem.startDate && (date ?? "new Date()") <= classItem.endDate && (
+            <ClassInfoCard key={classItem.id} classInfo={classItem} />
+          )
         ))
       ) : (
         <p>No classes available.</p>

@@ -4,17 +4,25 @@ import { DayPicker } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
+import { useState } from "react"
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>
+export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
+  selected: Date | undefined;
+  onSelect: (date: Date | undefined) => void;
+}
 
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  selected,
+  onSelect,
   ...props
 }: CalendarProps) {
   return (
     <DayPicker
+      selected={selected}
+      onSelect={onSelect}
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       classNames={{
@@ -62,6 +70,11 @@ function Calendar({
         IconRight: ({ ...props }) => <ChevronRightIcon className="h-4 w-4" />,
       }}
       {...props}
+      footer={
+        <div className="mb-4 mt-4">
+          {selected ? `Selected: ${selected.toLocaleDateString()}` : "Pick a day."}
+        </div>
+      }
     />
   )
 }
