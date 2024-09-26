@@ -171,3 +171,17 @@ export const initialStudents: StudentData[] = [
 
 
 export type { ClassData,StudentData };
+
+
+
+
+
+
+
+If I want to have attendance history how should I handle it in datasets?
+
+for example I think I should have this attendence history on students datasets and for the range of the class time from start to end and have sessions and then givin a  boolean to true if present and false if absent ?
+
+Is there any other way to handle this? 
+
+what are your suggestions ?

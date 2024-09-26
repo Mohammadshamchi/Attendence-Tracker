@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
 const DaySelector = () => {
+    const [newClassName, setNewClassName] = useState('');
+
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -36,6 +38,7 @@ export default function AddClass() {
                         type="text"
                         placeholder="Abstract Class"
                         className="w-full p-2 border border-gray-300 rounded-md"
+                        onChange={e => console.log(e.target.value)}
                     />
                 </div>
 
@@ -113,7 +116,7 @@ export default function AddClass() {
                     </label>
                     <textarea
                         placeholder="Value"
-                        rows="3"
+                        rows={3}
                         className="w-full p-2 border border-gray-300 rounded-md"
                     ></textarea>
                 </div>
