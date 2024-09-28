@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { initialStudents, StudentData, ClassData, initialClasses } from "../FakeData" // Assuming your data is in a separate file
+import { initialStudents, StudentData, ClassData, initialClasses } from "../FakeData"; // Assuming your data is in a separate file
 
 const DaySelector = ({ selectedDays, setSelectedDays }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
-
 
     const toggleDay = (day) => {
         setSelectedDays(prev =>
@@ -13,6 +12,7 @@ const DaySelector = ({ selectedDays, setSelectedDays }) => {
                 : [...prev, day]
         );
     };
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -25,6 +25,7 @@ const DaySelector = ({ selectedDays, setSelectedDays }) => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
     return (
         <div className="relative" ref={dropdownRef}>
             <button
@@ -58,14 +59,23 @@ const DaySelector = ({ selectedDays, setSelectedDays }) => {
 const StudentSearch = ({ selectedStudents, setSelectedStudents }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState<StudentData[]>([]);
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
     useEffect(() => {
+        if (searchTerm.trim() === '') {
+            setSearchResults([]);
+            setIsOpen(false);
+            return;
+        }
+
         const results = initialStudents.filter(student =>
             student.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             student.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             student.student_id.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setSearchResults(results);
+        setIsOpen(results.length > 0);
     }, [searchTerm]);
 
     const toggleStudent = (student: StudentData) => {
@@ -76,8 +86,21 @@ const StudentSearch = ({ selectedStudents, setSelectedStudents }) => {
         );
     };
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
             <input
                 type="text"
                 placeholder="Search students..."
@@ -90,7 +113,7 @@ const StudentSearch = ({ selectedStudents, setSelectedStudents }) => {
                     <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
                 </svg>
             </div>
-            {searchResults.length > 0 && (
+            {isOpen && searchResults.length > 0 && (
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
                     {searchResults.map(student => (
                         <div
