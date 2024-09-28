@@ -6,7 +6,7 @@ import ClassesPage from "./ClassesPage";
 import Dashboard from "./Dashboard";
 import ClassDetail from "./ClassDetail";
 import UserCard from "./UserCard";
-import AddClass from "./components/AddClass";
+import AddClass from './components/AddClass';
 import AddStudent from "./components/AddStudent";
 
 

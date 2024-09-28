@@ -41,6 +41,7 @@ export default function AddStudent() {
                         placeholder="First Name"
                         className="w-full p-2 border border-gray-300 rounded-md"
                         onChange={handleFirstNameChange}
+                        required
                     />
                 </div>
                 <div>
@@ -52,6 +53,7 @@ export default function AddStudent() {
                         placeholder="Last Name"
                         className="w-full p-2 border border-gray-300 rounded-md"
                         onChange={handleLastNameChange}
+                        required
                     />
                 </div>
                 <div>
@@ -63,6 +65,7 @@ export default function AddStudent() {
                         placeholder="0921 446 5035"
                         className="w-full p-2 border border-gray-300 rounded-md"
                         onChange={handleNumberChange}
+                        required
                     />
                 </div>
                 <div>
