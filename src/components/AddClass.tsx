@@ -136,7 +136,7 @@ const StudentSearch = ({ selectedStudents, setSelectedStudents }) => {
     );
 };
 
-export default function AddClass() {
+export default function AddClass({ onSubmit }) {
     const [selectedDays, setSelectedDays] = useState<string[]>([]);
     const [className, setClassName] = useState('');
     const [fromDate, setFromDate] = useState(new Date().toISOString().split('T')[0]);
@@ -164,11 +164,10 @@ export default function AddClass() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!validateForm()) {
-
+        if (validateForm()) {
             const newClass: Partial<ClassData> = {
-                name: className.trim(), // Trim the class name before submission
-                info: notes.trim(), // Also trim notes, though it's not required
+                name: className.trim(),
+                info: notes.trim(),
                 participants: selectedStudents.map(s => s.student_id),
                 startDate: new Date(fromDate),
                 endDate: new Date(toDate),
@@ -177,10 +176,10 @@ export default function AddClass() {
                     end: toTime
                 }
             };
-            console.log(newClass);
-            // Here you would typically send this data to your backend
-        };
-    }
+            onSubmit(newClass);
+        }
+    };
+
 
     return (
         <div className="max-w-sm mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
