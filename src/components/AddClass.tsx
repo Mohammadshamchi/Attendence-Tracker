@@ -139,29 +139,48 @@ const StudentSearch = ({ selectedStudents, setSelectedStudents }) => {
 export default function AddClass() {
     const [selectedDays, setSelectedDays] = useState<string[]>([]);
     const [className, setClassName] = useState('');
-    const [fromDate, setFromDate] = useState('2024-04-08');
-    const [toDate, setToDate] = useState('2024-04-18');
+    const [fromDate, setFromDate] = useState(new Date().toISOString().split('T')[0]);
+    const [toDate, setToDate] = useState("");
     const [fromTime, setFromTime] = useState('12:00');
     const [toTime, setToTime] = useState('14:00');
     const [notes, setNotes] = useState('');
     const [selectedStudents, setSelectedStudents] = useState<StudentData[]>([]);
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+    const validateForm = () => {
+        const newErrors: { [key: string]: string } = {};
+        if (!className.trim()) newErrors.className = "Class name is required and cannot be just spaces";
+        if (selectedDays.length === 0) newErrors.selectedDays = "Please select at least one day";
+        if (!fromDate) newErrors.fromDate = "Start date is required";
+        if (!toDate) newErrors.toDate = "End date is required";
+        if (!fromTime) newErrors.fromTime = "Start time is required";
+        if (!toTime) newErrors.toTime = "End time is required";
+        if (selectedStudents.length === 0) newErrors.selectedStudents = "Please select at least one student";
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const newClass: Partial<ClassData> = {
-            name: className,
-            info: notes,
-            participants: selectedStudents.map(s => s.student_id),
-            startDate: new Date(fromDate),
-            endDate: new Date(toDate),
-            classHours: {
-                start: fromTime,
-                end: toTime
-            }
+        if (!validateForm()) {
+
+            const newClass: Partial<ClassData> = {
+                name: className.trim(), // Trim the class name before submission
+                info: notes.trim(), // Also trim notes, though it's not required
+                participants: selectedStudents.map(s => s.student_id),
+                startDate: new Date(fromDate),
+                endDate: new Date(toDate),
+                classHours: {
+                    start: fromTime,
+                    end: toTime
+                }
+            };
+            console.log(newClass);
+            // Here you would typically send this data to your backend
         };
-        console.log(newClass);
-        // Here you would typically send this data to your backend
-    };
+    }
 
     return (
         <div className="max-w-sm mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
@@ -174,7 +193,9 @@ export default function AddClass() {
                         className="w-full p-2 border border-gray-300 rounded-md"
                         value={className}
                         onChange={e => setClassName(e.target.value)}
+                        required
                     />
+                    {errors.className && <p className="text-red-500 text-xs mt-1">{errors.className}</p>}
                 </div>
 
                 <div>
@@ -194,7 +215,9 @@ export default function AddClass() {
                             value={fromDate}
                             onChange={e => setFromDate(e.target.value)}
                             className="w-full p-2 border border-gray-300 rounded-md"
+                            required
                         />
+                        {errors.className && <p className="text-red-500 text-xs mt-1">{errors.className}</p>}
                     </div>
                     <div className="flex-1">
                         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -205,7 +228,9 @@ export default function AddClass() {
                             value={toDate}
                             onChange={e => setToDate(e.target.value)}
                             className="w-full p-2 border border-gray-300 rounded-md"
+                            required
                         />
+                        {errors.className && <p className="text-red-500 text-xs mt-1">{errors.className}</p>}
                     </div>
                 </div>
 
@@ -226,7 +251,9 @@ export default function AddClass() {
                             value={fromTime}
                             onChange={e => setFromTime(e.target.value)}
                             className="w-full p-2 border border-gray-300 rounded-md"
+                            required
                         />
+                        {errors.className && <p className="text-red-500 text-xs mt-1">{errors.className}</p>}
                     </div>
                     <div className="flex-1">
                         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -237,7 +264,9 @@ export default function AddClass() {
                             value={toTime}
                             onChange={e => setToTime(e.target.value)}
                             className="w-full p-2 border border-gray-300 rounded-md"
+                            required
                         />
+                        {errors.className && <p className="text-red-500 text-xs mt-1">{errors.className}</p>}
                     </div>
                 </div>
 
