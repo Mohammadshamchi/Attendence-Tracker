@@ -1,16 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { initialClasses } from "./FakeData";
-import { getCurrentFormattedDate } from "./dateUtils.ts";
+import { getCurrentFormattedDate } from "./dateUtils";
 import { Button } from "@/components/ui/button";
 import AddClass from "@/components/AddClass";
+import { useNavigate } from "react-router-dom";
 
 function ClassesPage() {
     const [classes, setClasses] = useState(initialClasses);
     const [isAddClassModalOpen, setIsAddClassModalOpen] = useState(false);
     const formattedDate = getCurrentFormattedDate();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        (async () => {
+            const response = await fetch("http://localhost:5001/api/classes");
+            const data = await response.json();
+            setClasses(data);
+        })();
+    }, []);
 
     const openAddClassModal = () => setIsAddClassModalOpen(true);
     const closeAddClassModal = () => setIsAddClassModalOpen(false);
+
+    const handleClassClick = (classItem) => {
+        navigate("/classdetail", { state: { classData: classItem } });
+    };
 
     return (
         <div className="max-w-3xl mx-auto px-4 mt-8">
@@ -22,11 +36,15 @@ function ClassesPage() {
                 <Button onClick={openAddClassModal}>Add Class</Button>
             </div>
             <div className="space-y-3">
-                {classes.map((classItem) => (
-                    <div key={classItem.id} className="bg-gray-100 rounded-lg p-4 flex justify-between items-center">
+                {classes.map((classItem, index) => (
+                    <div
+                        key={index}
+                        onClick={() => handleClassClick(classItem)}
+                        className="bg-gray-100 rounded-lg p-4 flex justify-between items-center mb-3 cursor-pointer"
+                    >
                         <span className="font-medium">{classItem.name}</span>
                         <div className="flex items-center">
-                            <span className="text-gray-500 mr-2">{classItem.time}</span>
+                            <span className="text-gray-500 mr-2">{classItem.classHours.start} - {classItem.classHours.end}</span>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                             </svg>
@@ -47,10 +65,7 @@ function ClassesPage() {
                             </button>
                         </div>
                         <AddClass onSubmit={(newClass) => {
-                            // Handle the new class data here
                             console.log(newClass);
-                            // You might want to add the new class to your classes state
-                            // setClasses([...classes, newClass]);
                             closeAddClassModal();
                         }} />
                     </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import { initialStudents, StudentData, ClassData, initialClasses } from "../FakeData"; // Assuming your data is in a separate file
 
 const DaySelector = ({ selectedDays, setSelectedDays }) => {
@@ -162,24 +163,37 @@ export default function AddClass({ onSubmit }) {
     };
 
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
-            const newClass: Partial<ClassData> = {
-                name: className.trim(),
-                info: notes.trim(),
-                participants: selectedStudents.map(s => s.student_id),
-                startDate: new Date(fromDate),
-                endDate: new Date(toDate),
-                classHours: {
-                    start: fromTime,
-                    end: toTime
+            try {
+                const newClass = {
+                    name: className.trim(),
+                    info: notes.trim(),
+                    participants: selectedStudents.map(s => s.student_id),
+                    startDate: fromDate,
+                    endDate: toDate,
+                    classHours: {
+                        start: fromTime,
+                        end: toTime
+                    },
+                    selectedDays: selectedDays
+                };
+
+                const response = await axios.post('http://localhost:5001/api/classes', newClass);
+
+                if (response.status === 201) {
+                    alert('Class created successfully!');
+                    // Reset form or redirect to another page
+                } else {
+                    alert('Failed to create class. Please try again.');
                 }
-            };
-            onSubmit(newClass);
+            } catch (error) {
+                console.error('Error creating class:', error);
+                alert('An error occurred while creating the class. Please try again.');
+            }
         }
     };
-
 
     return (
         <div className="max-w-sm mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">

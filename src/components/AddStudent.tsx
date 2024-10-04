@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 export default function AddStudent() {
 
@@ -7,15 +8,33 @@ export default function AddStudent() {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [notes, setNotes] = useState("");
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [submitError, setSubmitError] = useState("");
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (validateForm()) {
-            // Todo: Send data to the server
-            console.log("First Name:", firstName.trim());
-            console.log("Last Name:", lastName.trim());
-            console.log("Phone Number:", phoneNumber.trim());
-            console.log("Notes:", notes.trim());
+            setIsLoading(true);
+            setSubmitError("");
+            try {
+                const response = await axios.post("http://localhost:5001/api/students", {
+                    first_name: firstName.trim(),
+                    last_name: lastName.trim(),
+                    phone_number: phoneNumber.trim(),
+                    notes: notes.trim()
+                });
+                console.log("Student added successfully:", response.data);
+                // Reset form
+                setFirstName("");
+                setLastName("");
+                setPhoneNumber("");
+                setNotes("");
+            } catch (error) {
+                console.error("Error adding student:", error);
+                setSubmitError("Failed to add student. Please try again.");
+            } finally {
+                setIsLoading(false);
+            }
         }
     }
     function handleFirstNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -94,12 +113,14 @@ export default function AddStudent() {
                         onChange={handleNoteChange}
                     ></textarea>
                 </div>
+                {submitError && <p className="text-red-500 text-sm">{submitError}</p>}
 
                 <button
                     type="submit"
                     className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors"
+                    disabled={isLoading}
                 >
-                    Submit
+                    {isLoading ? "Submitting..." : "Submit"}
                 </button>
             </form>
         </div>
