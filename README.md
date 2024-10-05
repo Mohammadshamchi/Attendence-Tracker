@@ -10,76 +10,47 @@ This project consists of a frontend React application and a backend Node.js serv
 ## Installation
 
 1. Clone the repository:
+
    ```
    git clone https://github.com/Mohammadshamchi/Attendence-Tracker.git
-   cd attendance-system
+   cd Attendence-Tracker
    ```
 
 2. Install dependencies for both client and server:
    ```
-   npm run install-all
-   ```
-
-## Configuration
-
-1. Navigate to the `server` directory and create a `.env` file based on `.env.example`:
-   ```
-   cd server
-   cp .env.example .env
-   ```
-   Edit the `.env` file with your specific configuration (e.g., database connection details).
-
-2. Return to the root directory:
-   ```
-   cd ..
+   npm install
    ```
 
 ## Running the Application
 
-1. Start the backend server:
-   ```
-   npm run server
-   ```
+To run both frontend and backend concurrently in development mode:
 
-2. In a new terminal, start the frontend development server:
-   ```
-   npm run client
-   ```
+```
+npm run dev
+```
 
-3. Open your browser and visit `http://localhost:5173` to view the application.
+This will start the backend server and the frontend development server.
 
-## Development
-
-- To run both frontend and backend concurrently:
-  ```
-  npm run dev
-  ```
-
-## Testing
-
-- Run backend tests:
-  ```
-  npm run test:server
-  ```
-
-- Run frontend tests:
-  ```
-  npm run test:client
-  ```
+- The backend will be available at `http://localhost:5000` (or the port specified in your .env file)
+- The frontend will be available at `http://localhost:5173`
 
 ## Building for Production
 
 1. Build the frontend:
+
    ```
-   npm run build:client
+   npm run build
    ```
 
-2. The built frontend will be available in `client/dist/`.
+2. To start the production server (which will serve the built frontend):
+   ```
+   npm start
+   ```
 
-3. To serve the built frontend and run the backend:
-   ```
-   npm run start
-   ```
+## Project Structure
+
+- `/client`: Frontend React application
+- `/server`: Backend Node.js server
 
 ## Contributing
 
