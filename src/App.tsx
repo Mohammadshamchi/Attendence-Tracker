@@ -1,13 +1,13 @@
 import { useState } from "react";
-import "./App.css";
+import "./styles/App.css";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { initialClasses } from "./FakeData";
-import ClassesPage from "./ClassesPage";
-import Dashboard from "./Dashboard";
-import ClassDetail from "./ClassDetail";
-import UserCard from "./UserCard";
-import AddClass from './components/AddClass';
-import AddStudent from "./components/AddStudent";
+import { initialClasses } from "./utils/FakeData";
+import ClassesPage from "./pages/ClassesPage";
+import Dashboard from "./pages/Dashboard";
+import ClassDetail from "./pages/ClassDetail";
+import UserCard from "./components/common/UserCard";
+import AddClass from './components/class/AddClass';
+import AddStudent from "./components/student/AddStudent";
 
 
 

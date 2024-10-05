@@ -1,11 +1,11 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { initialClasses, ClassData } from "./FakeData";
+import { initialClasses, ClassData } from "../utils/FakeData.ts";
 import { Calendar } from "@/components/ui/calendar"
-import PageInfo from "./components/PageInfo";
-import ClassInfoCard from "./components/ClassInfoCard";
-import { getCurrentFormattedDate } from "./dateUtils.ts";
-import "./App.css";
+import PageInfo from "../components/common/PageInfo.tsx";
+import ClassInfoCard from "../components/class/ClassInfoCard.tsx";
+import { getCurrentFormattedDate } from "../utils/dateUtils.ts";
+import "../styles/App.css";
 
 function Dashboard() {
   const [classes, setClasses] = useState<ClassData[]>([]);

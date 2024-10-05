@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import PageInfo from "./components/PageInfo";
+import PageInfo from "../components/common/PageInfo";
 import { Button } from "@/components/ui/button";
-import ClassAttendance from "./components/ClassAttendance";
-import EditClassModal from "./components/EditClassModal"; // You'll need to create this component
+import ClassAttendance from "../components/attendance/ClassAttendance";
+import EditClassModal from "../components/class/EditClassModal"; // You'll need to create this component
 
 function ClassDetail() {
     const location = useLocation();

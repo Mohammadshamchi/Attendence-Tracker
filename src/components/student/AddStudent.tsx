@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import ClassSearch from "./ClassSearch";
+import ClassSearch from "../class/ClassSearch";
 import { ClassData } from "@/FakeData";
 
 export default function AddStudent() {

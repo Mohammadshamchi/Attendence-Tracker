@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { initialStudents, StudentData, ClassData, initialClasses } from "../FakeData"; // Assuming your data is in a separate file
-import StudentSearch from './StudentSearch';
+import { initialStudents, StudentData, ClassData, initialClasses } from "../../utils/FakeData"; // Assuming your data is in a separate file
+import StudentSearch from '../student/StudentSearch';
 
 const DaySelector = ({ selectedDays, setSelectedDays }) => {
     const [isOpen, setIsOpen] = useState(false);

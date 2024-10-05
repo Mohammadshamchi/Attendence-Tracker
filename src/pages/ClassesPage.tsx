@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { initialClasses } from "./FakeData";
-import { getCurrentFormattedDate } from "./dateUtils";
+import { initialClasses } from "../utils/FakeData";
+import { getCurrentFormattedDate } from "../utils/dateUtils";
 import { Button } from "@/components/ui/button";
-import AddClass from "@/components/AddClass";
+import AddClass from "@/components/class/AddClass";
 import { useNavigate } from "react-router-dom";
 
 function ClassesPage() {

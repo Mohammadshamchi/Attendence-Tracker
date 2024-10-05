@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { ClassData, initialClasses } from "../FakeData"; // Assuming your data is in a separate file
+import { initialStudents, StudentData, ClassData, initialClasses } from "../../utils/FakeData"; // Assuming your data is in a separate file
 
 
-const ClassSearch = ({ selectedClass, setSelectedClass }) => {
+const StudentSearch = ({ selectedStudents, setSelectedStudents }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [searchResults, setSearchResults] = useState<ClassData[]>([]);
+    const [searchResults, setSearchResults] = useState<StudentData[]>([]);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -15,18 +15,20 @@ const ClassSearch = ({ selectedClass, setSelectedClass }) => {
             return;
         }
 
-        const results = initialClasses.filter(eachClass =>
-            eachClass.name.toLowerCase().includes(searchTerm.toLowerCase())
+        const results = initialStudents.filter(student =>
+            student.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            student.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            student.student_id.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setSearchResults(results);
         setIsOpen(results.length > 0);
     }, [searchTerm]);
 
-    const toggleClass = (eachClass: ClassData) => {
-        setSelectedClass(prev =>
-            prev.some(c => c.eachClass === eachClass.name)
-                ? prev.filter(c => c.eachClass !== eachClass.name)
-                : [...prev, eachClass]
+    const toggleStudent = (student: StudentData) => {
+        setSelectedStudents(prev =>
+            prev.some(s => s.student_id === student.student_id)
+                ? prev.filter(s => s.student_id !== student.student_id)
+                : [...prev, student]
         );
     };
 
@@ -47,7 +49,7 @@ const ClassSearch = ({ selectedClass, setSelectedClass }) => {
         <div className="relative" ref={dropdownRef}>
             <input
                 type="text"
-                placeholder="Search Classes..."
+                placeholder="Search students..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full p-2 pr-8 border border-gray-300 rounded-md"
@@ -59,19 +61,19 @@ const ClassSearch = ({ selectedClass, setSelectedClass }) => {
             </div>
             {isOpen && searchResults.length > 0 && (
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
-                    {searchResults.map(eachClass => (
+                    {searchResults.map(student => (
                         <div
-                            key={eachClass.id}
+                            key={student.student_id}
                             className="flex items-center p-2 hover:bg-gray-100 cursor-pointer"
-                            onClick={() => toggleClass(eachClass)}
+                            onClick={() => toggleStudent(student)}
                         >
                             <input
                                 type="checkbox"
                                 className="mr-2"
-                                checked={selectedClass.some(c => c.name === eachClass.name)}
+                                checked={selectedStudents.some(s => s.student_id === student.student_id)}
                                 readOnly
                             />
-                            {eachClass.name}
+                            {student.first_name} {student.last_name} ({student.student_id})
                         </div>
                     ))}
                 </div>
@@ -79,4 +81,4 @@ const ClassSearch = ({ selectedClass, setSelectedClass }) => {
         </div>
     );
 };
-export default ClassSearch
+export default StudentSearch
