@@ -1,18 +1,16 @@
 {
-    "name": "attendance-system",
-    "version": "1.0.0",
-    "description": "Attendance Tracker System",
-    "scripts": {
-        "install-all": "npm install && cd client && npm install && cd ../server && npm install",
-        "client": "cd client && npm run dev",
-        "server": "cd server && npm run dev",
-        "dev": "concurrently \"npm run server\" \"npm run client\"",
-        "build:client": "cd client && npm run build",
-        "start": "cd server && npm start",
-        "test:client": "cd client && npm test",
-        "test:server": "cd server && npm test"
-    },
-    "devDependencies": {
-        "concurrently": "^6.2.0"
-    }
+  "name": "attendance-tracker",
+  "version": "1.0.0",
+  "description": "Attendance Tracker System",
+  "scripts": {
+    "install": "npm install --prefix client && npm install --prefix server",
+    "client": "npm run dev --prefix client",
+    "server": "npm run dev --prefix server",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "npm run build --prefix client",
+    "start": "npm start --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
 }
