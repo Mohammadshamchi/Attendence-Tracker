@@ -11,7 +11,7 @@ This project consists of a frontend React application and a backend Node.js serv
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/attendance-system.git
+   git clone https://github.com/Mohammadshamchi/attendance-system.git
    cd attendance-system
    ```
 
