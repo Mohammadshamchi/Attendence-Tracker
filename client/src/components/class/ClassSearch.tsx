@@ -7,6 +7,18 @@ const ClassSearch = ({ selectedClass, setSelectedClass }) => {
     const [searchResults, setSearchResults] = useState<ClassData[]>([]);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const [classes, setClasses] = useState([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const response = await fetch("http://localhost:5001/api/classes");
+            const data = await response.json();
+            setClasses(data);
+        }
+        console.log('All User Page');
+        fetchData();
+    }, [])
+
 
     useEffect(() => {
         if (searchTerm.trim() === '') {
@@ -15,12 +27,17 @@ const ClassSearch = ({ selectedClass, setSelectedClass }) => {
             return;
         }
 
-        const results = initialClasses.filter(eachClass =>
-            eachClass.name.toLowerCase().includes(searchTerm.toLowerCase())
+        const results = classes.filter(c => {
+
+            return (c.name.toLowerCase().includes(searchTerm.toLowerCase()))
+
+        }
         );
         setSearchResults(results);
         setIsOpen(results.length > 0);
     }, [searchTerm]);
+
+
 
     const toggleClass = (eachClass: ClassData) => {
         setSelectedClass(prev =>
@@ -61,7 +78,7 @@ const ClassSearch = ({ selectedClass, setSelectedClass }) => {
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
                     {searchResults.map(eachClass => (
                         <div
-                            key={eachClass.id}
+                            key={eachClass._id}
                             className="flex items-center p-2 hover:bg-gray-100 cursor-pointer"
                             onClick={() => toggleClass(eachClass)}
                         >

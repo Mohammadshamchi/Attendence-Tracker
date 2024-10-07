@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import ClassSearch from "../class/ClassSearch";
-import { ClassData } from "@/FakeData";
+
 
 export default function AddStudent() {
 
@@ -13,6 +13,7 @@ export default function AddStudent() {
     const [isLoading, setIsLoading] = useState(false);
     const [submitError, setSubmitError] = useState("");
     const [selectedClass, setSelectedClass] = useState<ClassData[]>([]);
+
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
