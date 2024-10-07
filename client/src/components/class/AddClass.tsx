@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { initialStudents, StudentData, ClassData, initialClasses } from "../../utils/FakeData"; // Assuming your data is in a separate file
 import StudentSearch from '../student/StudentSearch';
 
 const DaySelector = ({ selectedDays, setSelectedDays }) => {
@@ -15,13 +14,13 @@ const DaySelector = ({ selectedDays, setSelectedDays }) => {
         );
     };
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsOpen(false);
-            }
-        };
+    const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setIsOpen(false);
+        }
+    };
 
+    useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
@@ -58,8 +57,6 @@ const DaySelector = ({ selectedDays, setSelectedDays }) => {
     );
 };
 
-
-
 export default function AddClass({ onSubmit }) {
     const [selectedDays, setSelectedDays] = useState<string[]>([]);
     const [className, setClassName] = useState('');
@@ -84,7 +81,6 @@ export default function AddClass({ onSubmit }) {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();

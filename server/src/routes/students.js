@@ -1,7 +1,7 @@
+const { v4: uuidv4 } = require('uuid');
 const express = require('express');
 const router = express.Router();
 const { ObjectId } = require('mongodb');
-
 module.exports = (db) => {
 router.get('/', async (req, res) => {
     try {
@@ -14,15 +14,23 @@ router.get('/', async (req, res) => {
 
   router.post('/', async (req, res) => {
     try {
+      const student_id = uuidv4();
+      const {first_name, last_name, phone_number, email, notes, class_signed_up } = req.body;
+
+      // Validation for required fields
+      if (!student_id || !first_name || !last_name) {
+        return res.status(400).json({ message: "student_id, first_name, and last_name are required." });
+      }
+
       const newStudent = {
-        student_id: req.body.student_id,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        phone_number: req.body.phone_number,
-        email: req.body.email,
-        notes: req.body.notes,
+        student_id,
+        first_name,
+        last_name,
+        phone_number,
+        email,
+        notes,
         signup_date: new Date(),
-        class_signed_up: req.body.class_signed_up,
+        class_signed_up,
         attendance_history: []
       };
 
@@ -36,13 +44,20 @@ router.get('/', async (req, res) => {
   router.put('/:id', async (req, res) => {
     try {
       const studentId = new ObjectId(req.params.id);
+      const { first_name, last_name, phone_number, email, notes, class_signed_up } = req.body;
+
+      // Validation for required fields
+      if (!first_name && !last_name && !phone_number && !email && !notes && !class_signed_up) {
+        return res.status(400).json({ message: "At least one field must be provided for update." });
+      }
+
       const updatedStudent = {
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        phone_number: req.body.phone_number,
-        email: req.body.email,
-        notes: req.body.notes,
-        class_signed_up: req.body.class_signed_up
+        first_name,
+        last_name,
+        phone_number,
+        email,
+        notes,
+        class_signed_up
       };
 
       const result = await db.collection('students').updateOne(

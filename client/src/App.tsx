@@ -5,7 +5,7 @@ import { initialClasses } from "./utils/FakeData";
 import ClassesPage from "./pages/ClassesPage";
 import Dashboard from "./pages/Dashboard";
 import ClassDetail from "./pages/ClassDetail";
-import UserCard from "./components/common/UserCard";
+import AllUser from "./pages/AllUser";
 import AddClass from './components/class/AddClass';
 import AddStudent from "./components/student/AddStudent";
 
@@ -34,7 +34,7 @@ function App() {
                 <Link to="/classdetail">Class Detail </Link>
               </li>
               <li>
-                <Link to="/studentcard">Student Card </Link>
+                <Link to="/alluser">All Students </Link>
               </li>
               <li>
                 <Link to="/addclass">Add Class </Link>
@@ -49,7 +49,7 @@ function App() {
             <Route path="/" element={<Dashboard />}></Route>
             <Route path="/classess" element={<ClassesPage />}></Route>
             <Route path="/classdetail" element={<ClassDetail />}></Route>
-            <Route path="/studentcard" element={<UserCard />}></Route>
+            <Route path="/alluser" element={<AllUser />}></Route>
             <Route path="/addclass" element={<AddClass />}></Route>
             <Route path="/addstudent" element={<AddStudent />}></Route>
             <Route path="*" element={<p>404 page here</p>}></Route>

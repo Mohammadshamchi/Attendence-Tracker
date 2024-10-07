@@ -1,12 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
-import { initialStudents, StudentData, ClassData, initialClasses } from "../../utils/FakeData"; // Assuming your data is in a separate file
-
 
 const StudentSearch = ({ selectedStudents, setSelectedStudents }) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [students, setStudents] = useState<StudentData[]>([]);
     const [searchResults, setSearchResults] = useState<StudentData[]>([]);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        (async () => {
+            const response = await fetch("http://localhost:5001/api/students");
+            const data = await response.json();
+            setStudents(data);
+        })();
+    }, []);
+
+    useEffect(() => {
+        console.log('Selected Students:', selectedStudents);
+    }, [selectedStudents]);
 
     useEffect(() => {
         if (searchTerm.trim() === '') {
@@ -15,11 +26,15 @@ const StudentSearch = ({ selectedStudents, setSelectedStudents }) => {
             return;
         }
 
-        const results = initialStudents.filter(student =>
-            student.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            student.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            student.student_id.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        const results = students.filter((student) => {
+            if (!student) return false;
+            const searchTermLower = searchTerm.toLowerCase();
+            return (
+                (student.first_name?.toLowerCase().includes(searchTermLower) ||
+                    student.last_name?.toLowerCase().includes(searchTermLower) ||
+                    student.student_id?.toLowerCase().includes(searchTermLower)) ?? false
+            );
+        });
         setSearchResults(results);
         setIsOpen(results.length > 0);
     }, [searchTerm]);
@@ -31,6 +46,10 @@ const StudentSearch = ({ selectedStudents, setSelectedStudents }) => {
                 : [...prev, student]
         );
     };
+
+    useEffect(() => {
+        console.log("Selected Students:", selectedStudents);
+    })
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -61,19 +80,19 @@ const StudentSearch = ({ selectedStudents, setSelectedStudents }) => {
             </div>
             {isOpen && searchResults.length > 0 && (
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
-                    {searchResults.map(student => (
+                    {searchResults.map((student, index) => (
                         <div
-                            key={student.student_id}
+                            key={index}
                             className="flex items-center p-2 hover:bg-gray-100 cursor-pointer"
                             onClick={() => toggleStudent(student)}
                         >
                             <input
                                 type="checkbox"
                                 className="mr-2"
-                                checked={selectedStudents.some(s => s.student_id === student.student_id)}
+                                checked={selectedStudents.some(s => s.student_id === student?.student_id)}
                                 readOnly
                             />
-                            {student.first_name} {student.last_name} ({student.student_id})
+                            {student.first_name} {student.last_name}
                         </div>
                     ))}
                 </div>
@@ -81,4 +100,4 @@ const StudentSearch = ({ selectedStudents, setSelectedStudents }) => {
         </div>
     );
 };
-export default StudentSearch
+export default StudentSearch;
