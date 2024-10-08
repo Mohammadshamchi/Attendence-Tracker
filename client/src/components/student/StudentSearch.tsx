@@ -40,11 +40,14 @@ const StudentSearch = ({ selectedStudents, setSelectedStudents }) => {
     }, [searchTerm]);
 
     const toggleStudent = (student: StudentData) => {
-        setSelectedStudents(prev =>
-            prev.some(s => s.student_id === student.student_id)
+        setSelectedStudents(prev => {
+            const isSelected = prev.some(s => s.student_id === student.student_id);
+            const newSelection = isSelected
                 ? prev.filter(s => s.student_id !== student.student_id)
-                : [...prev, student]
-        );
+                : [...prev, student];
+            console.log("Updated selected students:", newSelection);
+            return newSelection;
+        });
     };
 
     useEffect(() => {

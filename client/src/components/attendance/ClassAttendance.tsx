@@ -13,7 +13,7 @@ interface Student {
     attendance_history: boolean[]
 }
 
-export default function ClassAttendance() {
+export default function ClassAttendance({ className }) {
     const [students, setStudents] = useState<Student[]>([]);
     const [error, setError] = useState<string | null>(null);
 
@@ -25,8 +25,16 @@ export default function ClassAttendance() {
                     throw new Error('Failed to fetch students');
                 }
                 const data = await response.json();
+                // Filter students based on the class name
+                const classStudents = data.filter(student => {
+                    return (
+                        console.log(student.class_signed_up),
+                        student.class_signed_up && student.class_signed_up.includes(className)
+                    )
+                }
+                );
                 // Initialize attendance_history if it doesn't exist
-                const formattedData = data.map((student: any) => ({
+                const formattedData = classStudents.map((student) => ({
                     ...student,
                     attendance_history: student.attendance_history || new Array(5).fill(false)
                 }));
@@ -37,8 +45,10 @@ export default function ClassAttendance() {
             }
         };
 
-        fetchStudents();
-    }, []);
+        if (className) {
+            fetchStudents();
+        }
+    }, [className]);
 
     const toggleAttendance = (studentId: string, day: number) => {
         setStudents(students.map(student =>
@@ -48,15 +58,19 @@ export default function ClassAttendance() {
         ))
     }
 
-    const addStudent = () => {
-        const newStudent: Student = {
+    const addStudent = async () => {
+        const newStudent = {
             _id: Date.now().toString(), // Temporary ID
             first_name: `New`,
             last_name: `Student`,
+            class_signed_up: [className], // Add the student to this class
             attendance_history: new Array(5).fill(false)
-        }
-        setStudents([...students, newStudent])
-    }
+        };
+
+        // Here you would typically make an API call to add the student to the backend
+        // For now, we'll just add it to the local state
+        setStudents([...students, newStudent]);
+    };
 
     if (error) {
         return <div className="text-red-500">{error}</div>;

@@ -15,11 +15,12 @@ module.exports = (db) => {
 
   // Create a new class
   router.post('/', async (req, res) => {
+    console.log("Received class data:", req.body);
     try {
       const newClass = {
         name: req.body.name,
         info: req.body.info,
-        participants: [], // Initialize empty participants array
+        participants: req.body.participants || [], // Use the participants from the request
         startDate: new Date(req.body.startDate),
         endDate: new Date(req.body.endDate),
         classHours: {
@@ -30,8 +31,10 @@ module.exports = (db) => {
       };
 
       const result = await db.collection('classes').insertOne(newClass);
+      console.log("Class created:", result);
       res.status(201).json({ message: "Class created successfully", classId: result.insertedId });
     } catch (error) {
+      console.error("Error creating class:", error);
       res.status(400).json({ message: error.message });
     }
   });

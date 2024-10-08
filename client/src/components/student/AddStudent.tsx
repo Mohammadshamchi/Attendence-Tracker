@@ -14,7 +14,6 @@ export default function AddStudent() {
     const [submitError, setSubmitError] = useState("");
     const [selectedClass, setSelectedClass] = useState<ClassData[]>([]);
 
-
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (validateForm()) {
@@ -40,6 +39,7 @@ export default function AddStudent() {
             } finally {
                 setIsLoading(false);
             }
+            setSelectedClass([]);
         }
     }
     function handleFirstNameChange(event: React.ChangeEvent<HTMLInputElement>) {

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { initialClasses } from "../utils/FakeData";
+
 import { getCurrentFormattedDate } from "../utils/dateUtils";
 import { Button } from "@/components/ui/button";
 import AddClass from "@/components/class/AddClass";
 import { useNavigate } from "react-router-dom";
 
 function ClassesPage() {
-    const [classes, setClasses] = useState(initialClasses);
+    const [classes, setClasses] = useState([]);
     const [isAddClassModalOpen, setIsAddClassModalOpen] = useState(false);
     const formattedDate = getCurrentFormattedDate();
     const navigate = useNavigate();

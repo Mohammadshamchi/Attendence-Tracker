@@ -50,7 +50,7 @@ function ClassDetail() {
                     <Button variant="destructive" onClick={handleDelete}>Delete Class</Button>
                 </div>
             </div>
-            <ClassAttendance classData={classData} />
+            <ClassAttendance className={classData.name} />
 
             {isEditModalOpen && (
                 <EditClassModal

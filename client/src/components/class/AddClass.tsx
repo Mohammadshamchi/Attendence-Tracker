@@ -69,22 +69,23 @@ export default function AddClass({ onSubmit }) {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     const validateForm = () => {
-        const newErrors: { [key: string]: string } = {};
-        if (!className.trim()) newErrors.className = "Class name is required and cannot be just spaces";
-        if (selectedDays.length === 0) newErrors.selectedDays = "Please select at least one day";
-        if (!fromDate) newErrors.fromDate = "Start date is required";
-        if (!toDate) newErrors.toDate = "End date is required";
-        if (!fromTime) newErrors.fromTime = "Start time is required";
-        if (!toTime) newErrors.toTime = "End time is required";
-        if (selectedStudents.length === 0) newErrors.selectedStudents = "Please select at least one student";
+        const errors = {};
+        if (!className.trim()) errors.className = "Class name is required";
+        if (!fromDate) errors.fromDate = "Start date is required";
+        if (!toDate) errors.toDate = "End date is required";
+        if (!fromTime) errors.fromTime = "Start time is required";
+        if (!toTime) errors.toTime = "End time is required";
+        if (selectedDays.length === 0) errors.selectedDays = "At least one day must be selected";
 
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
+        setErrors(errors);
+        console.log("Validation errors:", errors);
+        return Object.keys(errors).length === 0;
     };
-
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log("Form submitted");
         if (validateForm()) {
+            console.log("Form validated");
             try {
                 const newClass = {
                     name: className.trim(),
@@ -98,26 +99,31 @@ export default function AddClass({ onSubmit }) {
                     },
                     selectedDays: selectedDays
                 };
+                console.log("New class data:", newClass);
 
                 const response = await axios.post('http://localhost:5001/api/classes', newClass);
+                console.log("API response:", response);
 
                 if (response.status === 201) {
+                    console.log("Class created successfully");
                     alert('Class created successfully!');
-                    // Reset form or redirect to another page
+                    // Reset form fields here
                 } else {
-                    alert('Failed to create class. Please try again.');
+                    console.log("Failed to create class:", response);
+                    alert(`Failed to create class. Server responded with status: ${response.status}`);
                 }
             } catch (error) {
                 console.error('Error creating class:', error);
-                alert('An error occurred while creating the class. Please try again.');
+                alert('An error occurred while creating the class. Please check the console for more details.');
             }
+        } else {
+            console.log("Form validation failed");
         }
     };
-
     return (
         <div className="max-w-sm mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
             <h4 className="text-xl font-semibold mb-3">Class Name</h4>
-            <form className="space-y-4" onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
                 <div>
                     <input
                         type="text"
@@ -170,7 +176,10 @@ export default function AddClass({ onSubmit }) {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                         Students List
                     </label>
-                    <StudentSearch selectedStudents={selectedStudents} setSelectedStudents={setSelectedStudents} />
+                    <StudentSearch
+                        selectedStudents={selectedStudents}
+                        setSelectedStudents={setSelectedStudents}
+                    />
                 </div>
 
                 <div className="flex space-x-4">
