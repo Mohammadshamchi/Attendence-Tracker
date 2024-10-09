@@ -8,6 +8,8 @@ import ClassDetail from "./pages/ClassDetail";
 import AllUser from "./pages/AllUser";
 import AddClass from './components/class/AddClass';
 import AddStudent from "./components/student/AddStudent";
+import { Toaster } from "@/components/ui/sonner"
+
 
 
 
@@ -55,6 +57,7 @@ function App() {
             <Route path="*" element={<p>404 page here</p>}></Route>
           </Routes>
         </BrowserRouter>
+        <Toaster />
       </div>
     </>
   );

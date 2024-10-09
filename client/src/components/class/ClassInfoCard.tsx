@@ -1,17 +1,23 @@
-import { ClassData } from "@/FakeData";
+import { useNavigate } from "react-router-dom";
 
 interface ClassInfoCardProps {
     classInfo: ClassData;
 }
 
+
 export default function ClassInfoCard({ classInfo }: ClassInfoCardProps) {
     if (!classInfo) {
         return <div>No class information available</div>;
     }
+    const navigate = useNavigate();
+    function handleClassClick() {
+        navigate("/classdetail", { state: { classData: classInfo } });
+
+    }
 
     return (
-        <div className="dashboard-classes">
-            <div className="class-container">
+        <button onClick={handleClassClick} className="classinfocard-container">
+            <div className="dashboard-classes">
                 <div className="class-item">
                     <span className="class-name">{classInfo.name || 'No name'}</span>
                     {classInfo.classHours ? (
@@ -28,6 +34,6 @@ export default function ClassInfoCard({ classInfo }: ClassInfoCardProps) {
                     </span>
                 </div>
             </div>
-        </div>
+        </button>
     );
 }

@@ -36,9 +36,9 @@ function ClassesPage() {
                 <Button onClick={openAddClassModal}>Add Class</Button>
             </div>
             <div className="space-y-3">
-                {classes.map((classItem, index) => (
+                {classes.map((classItem) => (
                     <div
-                        key={index}
+                        key={classItem._id}
                         onClick={() => handleClassClick(classItem)}
                         className="bg-gray-100 rounded-lg p-4 flex justify-between items-center mb-3 cursor-pointer"
                     >

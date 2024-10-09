@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import StudentSearch from '../student/StudentSearch';
+import { toast } from "sonner"
+
+type StudentData = {
+    student_id: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    notes: string;
+};
 
 const DaySelector = ({ selectedDays, setSelectedDays }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -68,8 +77,30 @@ export default function AddClass({ onSubmit }) {
     const [selectedStudents, setSelectedStudents] = useState<StudentData[]>([]);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-    const validateForm = () => {
-        const errors = {};
+    interface FormErrors {
+        className?: string;
+        fromDate?: string;
+        toDate?: string;
+        fromTime?: string;
+        toTime?: string;
+        selectedDays?: string;
+    }
+
+    interface NewClass {
+        name: string;
+        info: string;
+        participants: string[];
+        startDate: string;
+        endDate: string;
+        classHours: {
+            start: string;
+            end: string;
+        };
+        selectedDays: string[];
+    }
+
+    const validateForm = (): FormErrors => {
+        const errors: FormErrors = {};
         if (!className.trim()) errors.className = "Class name is required";
         if (!fromDate) errors.fromDate = "Start date is required";
         if (!toDate) errors.toDate = "End date is required";
@@ -77,17 +108,25 @@ export default function AddClass({ onSubmit }) {
         if (!toTime) errors.toTime = "End time is required";
         if (selectedDays.length === 0) errors.selectedDays = "At least one day must be selected";
 
-        setErrors(errors);
-        console.log("Validation errors:", errors);
-        return Object.keys(errors).length === 0;
+        // Additional validations
+        if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
+            errors.toDate = "End date must be after start date";
+        }
+        if (fromTime && toTime && fromTime >= toTime) {
+            errors.toTime = "End time must be after start time";
+        }
+
+        return errors;
     };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Form submitted");
-        if (validateForm()) {
-            console.log("Form validated");
+        const errors = validateForm();
+        setErrors(errors);
+
+        if (Object.keys(errors).length === 0) {
             try {
-                const newClass = {
+                const newClass: NewClass = {
                     name: className.trim(),
                     info: notes.trim(),
                     participants: selectedStudents.map(s => s.student_id),
@@ -99,26 +138,52 @@ export default function AddClass({ onSubmit }) {
                     },
                     selectedDays: selectedDays
                 };
-                console.log("New class data:", newClass);
 
                 const response = await axios.post('http://localhost:5001/api/classes', newClass);
-                console.log("API response:", response);
 
                 if (response.status === 201) {
-                    console.log("Class created successfully");
-                    alert('Class created successfully!');
+                    toast.success("Class has been created successfully!");
                     // Reset form fields here
+                    resetForm();
                 } else {
-                    console.log("Failed to create class:", response);
-                    alert(`Failed to create class. Server responded with status: ${response.status}`);
+                    toast.error(`Failed to create class. Server responded with status: ${response.status}`);
                 }
             } catch (error) {
-                console.error('Error creating class:', error);
-                alert('An error occurred while creating the class. Please check the console for more details.');
+                handleApiError(error);
             }
         } else {
-            console.log("Form validation failed");
+            const errorFields = Object.keys(errors).join(', ');
+            toast.error(`Please correct the following fields: ${errorFields}`);
         }
+    };
+
+    const handleApiError = (error: unknown) => {
+        if (axios.isAxiosError(error)) {
+            const axiosError = error as AxiosError;
+            if (axiosError.response) {
+                toast.error(`Server error: ${axiosError.response.status} - ${axiosError.response.data}`);
+            } else if (axiosError.request) {
+                toast.error('No response received from the server. Please check your internet connection.');
+            } else {
+                toast.error(`Error setting up the request: ${axiosError.message}`);
+            }
+        } else {
+            toast.error('An unexpected error occurred. Please try again later.');
+        }
+        console.error('Error creating class:', error);
+    };
+
+    const resetForm = () => {
+        // Reset all form fields here
+        setClassName('');
+        setFromDate('');
+        setToDate('');
+        setFromTime('');
+        setToTime('');
+        setSelectedDays([]);
+        setSelectedStudents([]);
+        setNotes('');
+        setErrors({});
     };
     return (
         <div className="max-w-sm mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">

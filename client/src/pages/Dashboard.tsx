@@ -42,7 +42,7 @@ function Dashboard() {
         mode="single"
         selected={date}
         onSelect={(newDate) => newDate && setDate(newDate)}
-        className="rounded-md border"
+        className="rounded-md border mb-4"
       />
 
       {classes.length > 0 ? (
