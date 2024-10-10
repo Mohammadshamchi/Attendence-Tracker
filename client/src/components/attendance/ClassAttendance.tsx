@@ -16,29 +16,15 @@ interface Student {
 export default function ClassAttendance({ className }) {
     const [students, setStudents] = useState<Student[]>([]);
     const [error, setError] = useState<string | null>(null);
-
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const response = await fetch("http://localhost:5001/api/students");
+                const response = await fetch(`http://localhost:5001/api/students/class/${className}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch students');
                 }
                 const data = await response.json();
-                // Filter students based on the class name
-                const classStudents = data.filter(student => {
-                    return (
-                        console.log(student.class_signed_up),
-                        student.class_signed_up && student.class_signed_up.includes(className)
-                    )
-                }
-                );
-                // Initialize attendance_history if it doesn't exist
-                const formattedData = classStudents.map((student) => ({
-                    ...student,
-                    attendance_history: student.attendance_history || new Array(5).fill(false)
-                }));
-                setStudents(formattedData);
+                setStudents(data);
             } catch (err) {
                 setError('Failed to fetch students. Please try again later.');
                 console.error('Error fetching students:', err);
@@ -49,7 +35,6 @@ export default function ClassAttendance({ className }) {
             fetchStudents();
         }
     }, [className]);
-
     const toggleAttendance = (studentId: string, day: number) => {
         setStudents(students.map(student =>
             student._id === studentId

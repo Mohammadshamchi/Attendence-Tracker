@@ -5,42 +5,60 @@ const { ObjectId } = require('mongodb');
 
 module.exports = (db) => {
   router.get('/', async (req, res) => {
-    try {
-      const students = await db.collection('students').find().toArray();
-      res.json(students);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
+  try {
+    const students = await db.collection('students').find().toArray();
+    res.json(students);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
   });
+  router.get('/class/:className', async (req, res) => {
+  try {
+    const className = req.params.className;
+    const students = await db.collection('students').find({ class_signed_up: className }).toArray();
+    res.json(students);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
-  router.post('/', async (req, res) => {
-    try {
-      const student_id = uuidv4();
-      const {first_name, last_name, phone_number, email, notes, class_signed_up } = req.body;
 
-      // Validation for required fields
-      if (!first_name || !last_name) {
-        return res.status(400).json({ message: "first_name and last_name are required." });
-      }
-
-      const newStudent = {
-        student_id,
-        first_name,
-        last_name,
-        phone_number,
-        email,
-        notes,
-        signup_date: new Date(),
-        class_signed_up: class_signed_up || [],
-        attendance_history: []
-      };
-
-      const result = await db.collection('students').insertOne(newStudent);
-      res.status(201).json({ message: "Student added successfully", student: newStudent });
-    } catch (error) {
-      res.status(400).json({ message: error.message });
+router.post('/', async (req, res) => {
+  try {
+    const student_id = uuidv4();
+    const {first_name, last_name, phone_number, email, notes, class_signed_up } = req.body;
+    
+    // Validation for required fields
+    if (!first_name || !last_name) {
+      return res.status(400).json({ message: "first_name and last_name are required." });
     }
-  });
+    
+    const newStudent = {
+      student_id,
+      first_name,
+      last_name,
+      phone_number,
+      email,
+      notes,
+      signup_date: new Date(),
+      class_signed_up: class_signed_up || [],
+      attendance_history: []
+    };
+
+    const result = await db.collection('students').insertOne(newStudent);
+
+    if (newStudent.class_signed_up && newStudent.class_signed_up.length > 0) {
+      await db.collection('classes').updateMany(
+        { name: { $in: newStudent.class_signed_up } },
+        { $addToSet: { participants: newStudent.student_id } }
+      );
+    }
+
+    res.status(201).json({ message: "Student added successfully", student: newStudent });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
 
   router.put('/:id', async (req, res) => {
     try {

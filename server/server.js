@@ -8,7 +8,6 @@ const studentsRouter = require("./src/routes/students");
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// CORS configuration
 app.use(
   cors({
     origin: "http://localhost:5173", // Your frontend URL
