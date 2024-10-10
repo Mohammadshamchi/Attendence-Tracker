@@ -52,6 +52,15 @@ function ClassDetail() {
         setClassData(updatedClassData);
     };
 
+    const fetchClassData = async () => {
+        // Fetch updated class data
+        const response = await fetch(`http://localhost:5001/api/classes/${classData._id}`);
+        if (response.ok) {
+            const updatedClassData = await response.json();
+            setClassData(updatedClassData);
+        }
+    };
+
     return (
         <div className="max-w-5xl mx-auto px-4 mt-8">
             <div className="flex justify-between items-start mb-6">
@@ -78,11 +87,13 @@ function ClassDetail() {
                 </div>
             </div>
             <ClassAttendance className={classData.name} />
-
             {isEditModalOpen && (
                 <EditClassModal
                     classData={classData}
-                    onSave={handleEdit}
+                    onSave={async (updatedClass) => {
+                        await fetchClassData();
+                        setIsEditModalOpen(false);
+                    }}
                     onClose={() => setIsEditModalOpen(false)}
                 />
             )}
