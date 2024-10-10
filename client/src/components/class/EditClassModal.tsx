@@ -1,11 +1,35 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import StudentSearch from '../student/StudentSearch';
 
 const EditClassModal = ({ classData, onSave, onClose }) => {
     console.log("Class Data", classData);
+    console.log("Class Data Participants", classData.participants);
+
     // Initialize state with selected students
-    const [selectedStudents, setSelectedStudents] = useState(classData.participants || []);
+    const [selectedStudents, setSelectedStudents] = useState([]);
+
+    // Fetch full student data for the participants
+    useEffect(() => {
+        const fetchStudents = async () => {
+            try {
+                const response = await fetch("http://localhost:5001/api/students");
+                const allStudents = await response.json();
+
+                // Filter students to only include those in the class participants
+                const classStudents = allStudents.filter(student =>
+                    classData.participants.includes(student.student_id)
+                );
+
+                setSelectedStudents(classStudents);
+            } catch (error) {
+                console.error("Error fetching students:", error);
+            }
+        };
+
+        fetchStudents();
+    }, [classData.participants]);
+
     // Helper function to format date strings
     const formatDate = useCallback((dateString) => {
         const date = new Date(dateString);
@@ -23,18 +47,14 @@ const EditClassModal = ({ classData, onSave, onClose }) => {
         }
     }));
 
-
     // Handle form input changes
     const handleChange = useCallback((e) => {
         const { name, value } = e.target;
         setEditedClass(prev => {
-            console.log("NAME VALUE", name, value);
-            console.log("PREV", prev);
             if (name.includes('.')) {
                 const [objName, key] = name.split('.');
                 return {
                     ...prev,
-                    selectedStudents: selectedStudents.map(s => s.student_id),
                     [objName]: { ...prev[objName], [key]: value }
                 };
             }
@@ -48,7 +68,7 @@ const EditClassModal = ({ classData, onSave, onClose }) => {
         try {
             const updatedClassData = {
                 ...editedClass,
-                selectedStudents: selectedStudents.map(s => s.student_id),
+                participants: selectedStudents.map(s => s.student_id),
                 startDate: new Date(editedClass.startDate).toISOString(),
                 endDate: new Date(editedClass.endDate).toISOString(),
             };
@@ -107,7 +127,6 @@ const EditClassModal = ({ classData, onSave, onClose }) => {
                         <StudentSearch
                             selectedStudents={selectedStudents}
                             setSelectedStudents={setSelectedStudents}
-                            onChange={handleChange}
                         />
                     </div>
                     {renderField("Start Date", "startDate", "date", editedClass.startDate)}

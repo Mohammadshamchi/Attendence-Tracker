@@ -22,6 +22,7 @@ function ClassDetail() {
     const navigate = useNavigate();
     const [classData, setClassData] = useState(location.state?.classData || {});
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    console.log("Class Data on Class Detail Page", classData.participants)
 
     useEffect(() => {
         if (location.state?.classData) {

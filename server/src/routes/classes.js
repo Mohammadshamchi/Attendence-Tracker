@@ -20,7 +20,7 @@ module.exports = (db) => {
       const newClass = {
         name: req.body.name,
         info: req.body.info,
-        participants: req.body.participants || [], // Use the participants from the request
+        participants: req.body.participants || [], // Store participants as strings (student_id)
         startDate: new Date(req.body.startDate),
         endDate: new Date(req.body.endDate),
         classHours: {
@@ -46,6 +46,7 @@ module.exports = (db) => {
       const updatedClass = {
         name: req.body.name,
         info: req.body.info,
+        participants: req.body.participants, // Update participants
         startDate: new Date(req.body.startDate),
         endDate: new Date(req.body.endDate),
         classHours: {
@@ -81,48 +82,6 @@ module.exports = (db) => {
       }
 
       res.json({ message: "Class deleted successfully" });
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  });
-
-  // Add a student to a class
-  router.post('/:id/students', async (req, res) => {
-    try {
-      const classId = new ObjectId(req.params.id);
-      const studentId = new ObjectId(req.body.studentId);
-
-      const result = await db.collection('classes').updateOne(
-        { _id: classId },
-        { $addToSet: { participants: studentId } }
-      );
-
-      if (result.matchedCount === 0) {
-        return res.status(404).json({ message: "Class not found" });
-      }
-
-      res.json({ message: "Student added to class successfully" });
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  });
-
-  // Remove a student from a class
-  router.delete('/:id/students/:studentId', async (req, res) => {
-    try {
-      const classId = new ObjectId(req.params.id);
-      const studentId = new ObjectId(req.params.studentId);
-
-      const result = await db.collection('classes').updateOne(
-        { _id: classId },
-        { $pull: { participants: studentId } }
-      );
-
-      if (result.matchedCount === 0) {
-        return res.status(404).json({ message: "Class not found" });
-      }
-
-      res.json({ message: "Student removed from class successfully" });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }

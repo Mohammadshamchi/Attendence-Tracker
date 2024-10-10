@@ -60,7 +60,7 @@ export default function AddStudent() {
         if (!firstName.trim()) newErrors.firstName = "First name is required and cannot be just spaces";
         if (!lastName.trim()) newErrors.lastName = "Last name is required and cannot be just spaces";
         if (!phoneNumber.trim()) newErrors.phoneNumber = "Phone number is required";
-        if (selectedClass.length === 0) newErrors.selectedClass = "Please select at least one Class";
+        // if (selectedClass.length === 0) newErrors.selectedClass = "Please select at least one Class";
         else if (phoneNumber.trim().length < 10) newErrors.phoneNumber = "Phone number must be at least 10 characters long";
 
         setErrors(newErrors);

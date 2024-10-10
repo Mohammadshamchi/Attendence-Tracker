@@ -2,8 +2,9 @@ const { v4: uuidv4 } = require('uuid');
 const express = require('express');
 const router = express.Router();
 const { ObjectId } = require('mongodb');
+
 module.exports = (db) => {
-router.get('/', async (req, res) => {
+  router.get('/', async (req, res) => {
     try {
       const students = await db.collection('students').find().toArray();
       res.json(students);
@@ -18,8 +19,8 @@ router.get('/', async (req, res) => {
       const {first_name, last_name, phone_number, email, notes, class_signed_up } = req.body;
 
       // Validation for required fields
-      if (!student_id || !first_name || !last_name) {
-        return res.status(400).json({ message: "student_id, first_name, and last_name are required." });
+      if (!first_name || !last_name) {
+        return res.status(400).json({ message: "first_name and last_name are required." });
       }
 
       const newStudent = {
@@ -30,12 +31,12 @@ router.get('/', async (req, res) => {
         email,
         notes,
         signup_date: new Date(),
-        class_signed_up,
+        class_signed_up: class_signed_up || [],
         attendance_history: []
       };
 
       const result = await db.collection('students').insertOne(newStudent);
-      res.status(201).json({ message: "Student added successfully", studentId: result.insertedId });
+      res.status(201).json({ message: "Student added successfully", student: newStudent });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -43,7 +44,7 @@ router.get('/', async (req, res) => {
 
   router.put('/:id', async (req, res) => {
     try {
-      const studentId = new ObjectId(req.params.id);
+      const studentId = req.params.id; // Use student_id, not ObjectId
       const { first_name, last_name, phone_number, email, notes, class_signed_up } = req.body;
 
       // Validation for required fields
@@ -61,7 +62,7 @@ router.get('/', async (req, res) => {
       };
 
       const result = await db.collection('students').updateOne(
-        { _id: studentId },
+        { student_id: studentId },
         { $set: updatedStudent }
       );
 
@@ -77,8 +78,8 @@ router.get('/', async (req, res) => {
 
   router.delete('/:id', async (req, res) => {
     try {
-      const studentId = new ObjectId(req.params.id);
-      const result = await db.collection('students').deleteOne({ _id: studentId });
+      const studentId = req.params.id; // Use student_id, not ObjectId
+      const result = await db.collection('students').deleteOne({ student_id: studentId });
 
       if (result.deletedCount === 0) {
         return res.status(404).json({ message: "Student not found" });
