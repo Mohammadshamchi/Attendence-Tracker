@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
+import StudentSearch from '../student/StudentSearch';
 
-function EditClassModal({ classData, onSave, onClose }) {
-    const [editedClass, setEditedClass] = useState({
+const EditClassModal = ({ classData, onSave, onClose }) => {
+    console.log("Class Data", classData);
+    // Initialize state with selected students
+    const [selectedStudents, setSelectedStudents] = useState(classData.participants || []);
+    // Helper function to format date strings
+    const formatDate = useCallback((dateString) => {
+        const date = new Date(dateString);
+        return date.toISOString().split('T')[0];
+    }, []);
+
+    // Initialize state with formatted class data
+    const [editedClass, setEditedClass] = useState(() => ({
         ...classData,
         startDate: formatDate(classData.startDate),
         endDate: formatDate(classData.endDate),
@@ -10,49 +21,44 @@ function EditClassModal({ classData, onSave, onClose }) {
             start: classData.classHours.start,
             end: classData.classHours.end
         }
-    });
+    }));
 
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toISOString().split('T')[0];
-    }
-    const handleChange = (e) => {
+
+    // Handle form input changes
+    const handleChange = useCallback((e) => {
         const { name, value } = e.target;
         setEditedClass(prev => {
+            console.log("NAME VALUE", name, value);
+            console.log("PREV", prev);
             if (name.includes('.')) {
                 const [objName, key] = name.split('.');
                 return {
                     ...prev,
-                    [objName]: {
-                        ...prev[objName],
-                        [key]: value
-                    }
+                    selectedStudents: selectedStudents.map(s => s.student_id),
+                    [objName]: { ...prev[objName], [key]: value }
                 };
             }
             return { ...prev, [name]: value };
         });
-    };
+    }, []);
 
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const updatedClassData = {
                 ...editedClass,
+                selectedStudents: selectedStudents.map(s => s.student_id),
                 startDate: new Date(editedClass.startDate).toISOString(),
                 endDate: new Date(editedClass.endDate).toISOString(),
-                classHours: {
-                    start: editedClass.classHours.start,
-                    end: editedClass.classHours.end
-                }
             };
 
             const response = await fetch(`http://localhost:5001/api/classes/${classData._id}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedClassData),
             });
+
             if (response.ok) {
                 const updatedClass = await response.json();
                 onSave(updatedClass);
@@ -65,21 +71,26 @@ function EditClassModal({ classData, onSave, onClose }) {
         }
     };
 
+    // Render form fields
+    const renderField = useCallback((label, name, type = "text", value) => (
+        <div className="mb-4" key={name}>
+            <label className="block mb-2">{label}</label>
+            <input
+                type={type}
+                name={name}
+                value={value}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+            />
+        </div>
+    ), [handleChange]);
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
             <div className="bg-white rounded-lg p-6 max-w-md w-full">
                 <h2 className="text-xl font-bold mb-4">Edit Class</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label className="block mb-2">Name</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={editedClass.name}
-                            onChange={handleChange}
-                            className="w-full p-2 border rounded"
-                        />
-                    </div>
+                    {renderField("Name", "name", "text", editedClass.name)}
                     <div className="mb-4">
                         <label className="block mb-2">Info</label>
                         <textarea
@@ -90,46 +101,19 @@ function EditClassModal({ classData, onSave, onClose }) {
                         />
                     </div>
                     <div className="mb-4">
-                        <label className="block mb-2">Start Date</label>
-                        <input
-                            type="date"
-                            name="startDate"
-                            value={editedClass.startDate}
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Students List
+                        </label>
+                        <StudentSearch
+                            selectedStudents={selectedStudents}
+                            setSelectedStudents={setSelectedStudents}
                             onChange={handleChange}
-                            className="w-full p-2 border rounded"
                         />
                     </div>
-                    <div className="mb-4">
-                        <label className="block mb-2">End Date</label>
-                        <input
-                            type="date"
-                            name="endDate"
-                            value={editedClass.endDate}
-                            onChange={handleChange}
-                            className="w-full p-2 border rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block mb-2">Class Hours Start</label>
-                        <input
-                            type="time"
-                            name="classHours.start"
-                            value={editedClass.classHours.start}
-                            onChange={handleChange}
-                            className="w-full p-2 border rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block mb-2">Class Hours End</label>
-                        <input
-                            type="time"
-                            name="classHours.end"
-                            value={editedClass.classHours.end}
-                            onChange={handleChange}
-                            className="w-full p-2 border rounded"
-                        />
-                    </div>
-                    {/* Add more fields as needed */}
+                    {renderField("Start Date", "startDate", "date", editedClass.startDate)}
+                    {renderField("End Date", "endDate", "date", editedClass.endDate)}
+                    {renderField("Class Hours Start", "classHours.start", "time", editedClass.classHours.start)}
+                    {renderField("Class Hours End", "classHours.end", "time", editedClass.classHours.end)}
                     <div className="flex justify-end space-x-2">
                         <Button type="button" onClick={onClose} variant="secondary">Cancel</Button>
                         <Button type="submit">Save Changes</Button>
@@ -138,6 +122,6 @@ function EditClassModal({ classData, onSave, onClose }) {
             </div>
         </div>
     );
-}
+};
 
 export default EditClassModal;
